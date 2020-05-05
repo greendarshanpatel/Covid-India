@@ -8,15 +8,57 @@
 
 import UIKit
 
-class StateViewController: UIViewController {
+class StateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    @IBOutlet weak var StateTableView: UITableView!
+    var DataRecived = [State]()
+    var result : StateResponce?
+    var selectedItem : State!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.title = "State"
         // Do any additional setup after loading the view.
+        callit()
     }
     
-
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return DataRecived.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = StateTableView.dequeueReusableCell(withIdentifier: "stateCell") as! StateTableViewCell
+        cell.stateLabel.text = DataRecived[indexPath.row].state
+        return cell
+    }
+    
+    private func callit() {
+            let jsonUrlString = "https://api.covid19india.org/v2/state_district_wise.json"
+                    guard let url = URL(string: jsonUrlString) else { return }
+                    
+                    URLSession.shared.dataTask(with: url) { (data, response, err) in
+                        //perhaps check err
+                        //also perhaps check response status 200 OK
+                        
+                        guard let data = data else { return }
+                       
+                        do {
+                            self.result = try JSONDecoder().decode(StateResponce.self, from: data)
+                            print(self.result?.data.count as Any)
+    //                        guard let _result = self.result else {return}
+    //                        onResult(_result)
+                            self.DataRecived = self.result?.data ?? []
+                             DispatchQueue.main.async {
+                                self.StateTableView.reloadData()
+                            }
+                            
+                        } catch let jsonErr {
+                            print("Error serializing json:", jsonErr)
+                        }
+                    }.resume()
+        }
+    
     /*
     // MARK: - Navigation
 

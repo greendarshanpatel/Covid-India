@@ -27,6 +27,7 @@ public final class District: Codable {
         case recovered
         case delta
        
+       
         
     }
     

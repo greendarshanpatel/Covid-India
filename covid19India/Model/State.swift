@@ -6,62 +6,43 @@
 //  Copyright © 2020 Darshan. All rights reserved.
 //
 
+
 import Foundation
 public final class State: Codable {
     
     public let state : String
-    public let district: [District]
+    public let districtData: [District]
+    public let statecode : String
     enum CodingKeys: String, CodingKey {
         case state
-        case district
+        case districtData
+        case statecode
     }
     
     init(decoder: Decoder) throws {
         do {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             state = try values.decode(String.self, forKey: .state)
-            district = try values.decode([District].self, forKey: .district)
-            
+            districtData = try values.decode([District].self, forKey: .districtData)
+            statecode = try values.decode(String.self, forKey: .statecode)
         }
     }
 }
 
-//public final class UserResponce:Codable {
-//    
-//    public let status : Int
-//    public let message : String
-//    public let data : [User]
-//    
-//    enum CodingKeys: String, CodingKey {
-//        case status
-//        case message
-//        case data
-//        
-//    }
-//    
-//    init(decoder: Decoder) throws {
-//        do {
-//            let values = try decoder.container(keyedBy: CodingKeys.self)
-//            status = try values.decode(Int.self, forKey: .status)
-//            message = try values.decode(String.self, forKey: .message)
-//            data = try values.decode([User].self, forKey: .data)
-//            
-//        }
-//    }
-//    
-//    
-//}
-//"state": "Bihar",
-//"districtData": [
-//  {
-//    "district": "Begusarai",
-//    "active": 8,
-//    "confirmed": 9,
-//    "deceased": 0,
-//    "recovered": 1,
-//    "delta": {
-//      "confirmed": 0,
-//      "deceased": 0,
-//      "recovered": 0
-//    }
-//  },
+public final class StateResponce:Codable {
+    
+    public let data : [State]
+    
+    enum CodingKeys: String, CodingKey {
+        case data
+        
+    }
+    
+    init(decoder: Decoder) throws {
+        do {
+            let values = try decoder.container(keyedBy: CodingKeys.self)
+            data = try values.decode([State].self, forKey: .data)
+            
+        }
+    }
+}
